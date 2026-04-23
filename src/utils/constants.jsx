@@ -28,4 +28,4 @@ export const SUPPORTED_LANGUAGES = [
   { identifier: "spanish", name: "Spanish" },
 ];
 
-export const OPENAI_KEY = import.meta.env.VITE_OPENAI_KEY;
+export const GEMINI_API_KEY= import.meta.env.VITE_GEMINI_API_KEY;

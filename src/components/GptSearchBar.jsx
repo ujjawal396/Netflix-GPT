@@ -1,4 +1,4 @@
-import openai from "../utils/openai";
+import ai from "../utils/gemini";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -8,6 +8,7 @@ import { addGptMovieResult } from "../utils/gptSlice";
 
 const GptSearchBar = () => {
   const dispatch = useDispatch();
+  const [error, setError] = useState("");
   const langKey = useSelector((store) => store.config.lang);
 
    const searchText = useRef(null);
@@ -26,6 +27,10 @@ const GptSearchBar = () => {
   };
 
   const handleGptSearchClick = async () => {
+    if(searchText.current.value===""){
+      setError("Enter something first");
+     return;
+    }
     console.log(searchText.current.value);
     // Make an API call to GPT API and get Movie Results
 
@@ -34,10 +39,13 @@ const GptSearchBar = () => {
       searchText.current.value +
       ". only give me names of 5 movies, comma seperated like the example result given ahead. Example Result: Gadar, Sholay, Don, Golmaal, Koi Mil Gaya";
 
-    const gptResults = await openai.chat.completions.create({
-      messages: [{ role: "user", content: gptQuery }],
-      model: 'gpt-4o-mini',
-    });
+    const gptResults = await ai.models.generateContent({
+    model: "gemini-3-flash-preview",
+    contents: gptQuery,
+  });
+
+
+  console.log(gptResults.text);
 
      
 
@@ -46,14 +54,14 @@ const GptSearchBar = () => {
 
 
 
-    if (!gptResults.choices) {
+    if (!gptResults.text) {
       // TODO: Write Error Handling
     }
 
-    console.log(gptResults.choices?.[0]?.message?.content);
+    //console.log(gptResults.choices?.[0]?.message?.content);
 
     
-    const gptMovies = gptResults.choices?.[0]?.message?.content.split(",");
+    const gptMovies = gptResults.text.split(",");
     // For each movie I will search TMDB API
 
     const promiseArray = gptMovies.map((movie) => searchMovieTMDB(movie));
