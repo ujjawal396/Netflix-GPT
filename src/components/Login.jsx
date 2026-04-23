@@ -91,8 +91,8 @@ const Login = () => {
   return (
     <div>
       <Header />
-      <div className="absolute">
-      <img className="h-screen object-cover" src={BG_URL} alt="logo" />
+      <div className="absolute inset-0">
+      <img className="h-screen w-full object-cover" src={BG_URL} alt="logo" />
       </div>
       <form 
        onSubmit={(e) => e.preventDefault()}

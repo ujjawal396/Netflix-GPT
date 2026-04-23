@@ -1,10 +1,10 @@
 import ai from "../utils/gemini";
-import { useRef } from "react";
+import { useRef,useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import lang from "../utils/languageConstants";
 import { API_OPTIONS } from "../utils/constants";
-import { addGptMovieResult } from "../utils/gptSlice";
+import { addGptMovieResult,clearGptMovieResult } from "../utils/gptSlice";
 
 const GptSearchBar = () => {
   const dispatch = useDispatch();
@@ -27,9 +27,13 @@ const GptSearchBar = () => {
   };
 
   const handleGptSearchClick = async () => {
-    if(searchText.current.value===""){
+    if(!searchText.current.value || searchText.current.value.trim() === ""){
       setError("Enter something first");
+      dispatch(clearGptMovieResult());
+
+      
      return;
+
     }
     console.log(searchText.current.value);
     // Make an API call to GPT API and get Movie Results
@@ -77,15 +81,21 @@ const GptSearchBar = () => {
   };
 
   return (
-   <div className="pt-[35%] md:pt-[10%] flex justify-center">
+   <div className="pt-[35%] md:pt-[10%] w-full flex flex-col items-center">
      <form
-        className="w-full md:w-1/2 bg-black grid grid-cols-12"
+     
+      className="w-full max-w-3xl bg-black grid grid-cols-12"
         onSubmit={(e) => e.preventDefault()}
       >
         <input ref={searchText}
           type="text"
           className=" p-4 m-4 col-span-9"
           placeholder={lang[langKey].gptSearchPlaceholder}
+          onChange={() => {
+            setError("");
+            dispatch(clearGptMovieResult());
+            
+          }}
         />
         <button
           className="col-span-3 m-4 py-2 px-4 bg-red-700 text-white rounded-lg"
@@ -94,6 +104,12 @@ const GptSearchBar = () => {
           {lang[langKey].search}
         </button>
       </form>
+
+      {error && (
+  <p className="text-red-500 mt-2">
+    {error}
+  </p>)}
+      
     </div>
   );
 };
