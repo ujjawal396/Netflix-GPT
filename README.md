@@ -46,7 +46,7 @@ used vite bundler for react project
 - NetflixGPT
     - Search Bar
     - Movie Suggestions
-     Get Open AI Api Key 
+     Get Google Gemini Api Key 
 - Gpt Search API Call
 - fetched gptMoviesSuggestions from TMDB
 - created gptSlice added data
